@@ -33,14 +33,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Firing)
 		void Fire();
 
-	UPROPERTY(EditAnyWhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 		TSubclassOf<AProjectile> ProjectileBlueprint;
-	UPROPERTY(EditAnyWhere, Category = Firing)
-		float LaunchSpeed = 100000.0f;
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+		float LaunchSpeed = 4000.0f;
 	
 	void AimAt(FVector HitLocation);
 
 private:
 	UTankBarrel* Barrel = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+		float ReloadTime = 3.0f;
+
+	double LastTimeFire = 0;
 };

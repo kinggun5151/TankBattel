@@ -1,43 +1,26 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Tank.h"
 #include "TankAIController.h"
+#include "Tank.h"
 
 
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto PlayerTank = GetPlayerTank();
-	if (!PlayerTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AIController cant find the player tank"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AIController find player tank %s"), *PlayerTank->GetName())
-	}
-
+	PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	ControlledTank = Cast<ATank>(GetPawn());
 }
 
 void ATankAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (GetPlayerTank())
+	//UE_LOG(LogTemp, Warning, TEXT("AI Tank Fired"));
+	if (PlayerTank && ControlledTank)
 	{
-		GetControlledTank()->AimAt(GetPlayerTank()->GetTargetLocation());
+		ControlledTank->AimAt(PlayerTank->GetTargetLocation());
+		ControlledTank->Fire();
 	}
+	
 }
 
-ATank* ATankAIController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
-
-ATank* ATankAIController::GetPlayerTank() const
-{
-	auto PlayerTank = GetWorld()->GetFirstPlayerController();
-	if (!PlayerTank) { return nullptr; }
-
-	return Cast<ATank>(PlayerTank->GetPawn());
-}
