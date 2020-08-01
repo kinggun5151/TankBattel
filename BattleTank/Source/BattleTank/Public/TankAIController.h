@@ -20,4 +20,5 @@ private:
 	ATank* ControlledTank =nullptr;
 	ATank* PlayerTank =nullptr;
 
+	float AcceptanceRadius = 3000;
 };

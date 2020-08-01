@@ -15,12 +15,13 @@ void ATankAIController::BeginPlay()
 void ATankAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	//UE_LOG(LogTemp, Warning, TEXT("AI Tank Fired"));
 	if (PlayerTank && ControlledTank)
 	{
 		ControlledTank->AimAt(PlayerTank->GetTargetLocation());
 		ControlledTank->Fire();
 	}
 	
+	MoveToActor(PlayerTank, AcceptanceRadius);
+
 }
 
