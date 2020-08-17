@@ -24,25 +24,6 @@ void ATank::BeginPlay()
 }
 
 
-void ATank::Fire()
-{
-	bool isReloaded = (FPlatformTime::Seconds() -LastTimeFire)>ReloadTime;
-	if (!ensure(Barrel && isReloaded)) { return; }
 
-	auto Projectile = GetWorld()->SpawnActor<AProjectile>(
-		ProjectileBlueprint,
-		Barrel->GetSocketLocation(FName("Projectile")),
-		Barrel->GetSocketRotation(FName("Projectile"))
-		);
-	Projectile->LaunchProjectile(LaunchSpeed);
-	LastTimeFire = FPlatformTime::Seconds();
-	
-}
 
-void ATank::AimAt(FVector HitLocation)
-{
-	if (!ensure (TankAimingComponent) ){ return; }
-
-	TankAimingComponent->AimAt(HitLocation,LaunchSpeed);
-}
 
