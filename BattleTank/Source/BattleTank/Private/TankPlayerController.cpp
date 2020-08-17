@@ -2,26 +2,20 @@
 
 #include "TankPlayerController.h"
 #include "Tank.h"
+#include "TankAimingComponent.h"
 
-
+//TODO delete this
 ATank* ATankPlayerController::GetControlledTank() const { return Cast<ATank>(GetPawn()); }
 
 void ATankPlayerController::BeginPlay() 
 {
 	Super::BeginPlay();
 
-	
-	auto ControlledTank = GetControlledTank();
-	if (!ControlledTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController not posessing a Tank"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerController posessed tank %s"), *ControlledTank->GetName())
-	}
+	ControlledTank = Cast<ATank>(GetPawn());
 
-
+	auto AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
+	FoundAimingComponent(AimingComponent);
 }
 
 void ATankPlayerController::Tick(float DeltaSeconds) 
@@ -34,13 +28,13 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!GetControlledTank()) { return; }
+	if (!ensure(ControlledTank)) { return; }
 
 	FVector HitLocation;
 
-	if (GetSightRayHitLocation(HitLocation))
+	if ((GetSightRayHitLocation(HitLocation)))
 	{
-		GetControlledTank()->AimAt(HitLocation);
+		ControlledTank->AimAt(HitLocation);
 	}
 }
 

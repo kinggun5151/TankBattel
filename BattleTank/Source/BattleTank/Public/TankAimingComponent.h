@@ -25,12 +25,13 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 public:
 	UTankAimingComponent();
 	void AimAt(FVector HitLocation,float LaunchSpeed);
-	void SetBarrelRefrence(UTankBarrel* BarrelToSet);
-	void SetTurretRefrence(UTankTurret* TurretToSet);
+
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-		EFiringState FiringState = EFiringState::Reloding;
+		EFiringState FiringState = EFiringState::Locked;
 
 private:
 	void RotateBarrelAndTurret(FVector AimingDirection);

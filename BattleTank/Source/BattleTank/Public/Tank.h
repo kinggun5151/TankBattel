@@ -7,7 +7,6 @@
 #include "Tank.generated.h"
 
 class UTankAimingComponent;
-class UTankMovementComponent;
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
@@ -27,12 +26,7 @@ protected:
 public:
 	// Sets default values for this pawn's properties
 	ATank();
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UFUNCTION(BlueprintCallable,Category=Setup)
-		void SetBarrelRefrence(UTankBarrel* BarrelToSet);
-	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetTurretRefrence(UTankTurret* TurretToSet);
+	
 	UFUNCTION(BlueprintCallable, Category = Firing)
 		void Fire();
 
