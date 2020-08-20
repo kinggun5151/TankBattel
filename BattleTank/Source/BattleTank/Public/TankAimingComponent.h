@@ -15,7 +15,8 @@ enum class EFiringState : uint8
 {
 	Reloding,
 	Aiming,
-	Locked
+	Locked,
+	OutOfAmmo
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -38,22 +39,37 @@ public:
 		TSubclassOf<AProjectile> ProjectileBlueprint ;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-		float LaunchSpeed = 4000.0f;
+		float LaunchSpeed = 20000.0f;
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		int GetAmmoLeft() const;
+	
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+		int AmmoLeft = 3;
+	EFiringState GetFiringState() const;
 protected:
-
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-		EFiringState FiringState = EFiringState::Locked;
+		EFiringState FiringState = EFiringState::Reloding;
 
 private:
-	void RotateBarrelAndTurret(FVector AimingDirection);
+	void RotateBarrelAndTurret(FVector AimingDirectionVector);
+
+	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override ;
+
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
+
+	bool IsAiming();
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		float ReloadTime = 3.0f;
 
 	double LastTimeFire = 0;
+	FVector AimingDirection;
+
+	
+
 
 };
