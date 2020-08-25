@@ -29,24 +29,27 @@ public:
 
 	void AimAt(FVector HitLocation);
 
+	EFiringState GetFiringState() const;
+
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
 		void Fire();
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		int32 GetAmmoLeft() const;
+
+
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 		TSubclassOf<AProjectile> ProjectileBlueprint ;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-		float LaunchSpeed = 20000.0f;
+		float LaunchSpeed = 5000.0f;
 
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-		int GetAmmoLeft() const;
-	
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-		int AmmoLeft = 3;
-	EFiringState GetFiringState() const;
+		int32 AmmoLeft = 3;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 		EFiringState FiringState = EFiringState::Reloding;
