@@ -1,7 +1,10 @@
 
 #include "Projectile.h"
+#include "Particles/ParticleSystemComponent.h"
+#include <Runtime\Engine\Classes\PhysicsEngine\RadialForceComponent.h>
 #include "GameFramework/ProjectileMovementComponent.h"
-
+#include "TimerManager.h"
+#include <Runtime\Engine\Classes\Kismet\GameplayStatics.h>
 
 // Sets default values
 AProjectile::AProjectile()
@@ -23,6 +26,9 @@ AProjectile::AProjectile()
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
 	ProjectileMovement->bAutoActivate = false;
+
+	ExpelosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Expelosion Force"));
+	ExpelosionForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
@@ -38,6 +44,21 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 {
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
+	ExpelosionForce->FireImpulse();
+	SetRootComponent(ImpactBlast);
+	CollisionMesh->DestroyComponent();
+
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		ProjectileDamage,
+		GetActorLocation(),
+		ExpelosionForce->Radius,
+		UDamageType::StaticClass(),
+		TArray<AActor*>()
+	);
+
+	FTimerHandle Timer;
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AProjectile::OnTimerExpire, DestroyDelay, false);
 }
 
 void  AProjectile::LaunchProjectile(float Speed)
@@ -46,3 +67,7 @@ void  AProjectile::LaunchProjectile(float Speed)
 	ProjectileMovement->Activate();
 }
 
+void  AProjectile::OnTimerExpire()
+{
+	Destroy();
+}

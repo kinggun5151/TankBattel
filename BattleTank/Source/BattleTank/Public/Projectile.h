@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Particles/ParticleSystemComponent.h"
 #include "Projectile.generated.h"
 
+class URadialForceComponent;
+class UParticleSystemComponent;
 class UProjectileMovementComponent;
 
 UCLASS()
@@ -34,9 +35,17 @@ private:
 		UParticleSystemComponent* LaunchBlast = nullptr;
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* CollisionMesh = nullptr;
+	UPROPERTY(VisibleAnywhere)
+		URadialForceComponent* ExpelosionForce = nullptr;
 
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	void  OnTimerExpire();
 
+	UPROPERTY(EditDefaultsOnly)
+		float DestroyDelay = 10.f;
 
+	UPROPERTY(EditDefaultsOnly)
+		float ProjectileDamage = 20.f;
+	
 };

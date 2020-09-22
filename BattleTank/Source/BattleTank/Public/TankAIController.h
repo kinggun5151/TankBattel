@@ -22,8 +22,10 @@ private:
 	void BeginPlay() override;
 	void Tick(float DeltaSeconds) override;
 
+	virtual void SetPawn(APawn* InPawn) override;
+	UFUNCTION()
+		void OnPossesdTankDeath();
 	APawn* PlayerTank =nullptr;
-
 	UTankAimingComponent* AimingComponent = nullptr;
 
 };
